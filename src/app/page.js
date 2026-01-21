@@ -8,35 +8,65 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState(false)
   const [activeTestimonial, setActiveTestimonial] = useState(0)
   const [activeService, setActiveService] = useState(null)
+  const [activeTab, setActiveTab] = useState('Foto')
+  const [activeFaq, setActiveFaq] = useState(null)
+  const [formData, setFormData] = useState({
+    nume: '',
+    telefon: '',
+    email: '',
+    serviciu: '',
+    mesaj: '',
+    preferinta: 'Telefon',
+    interval: ''
+  })
+  const [formStatus, setFormStatus] = useState(null)
+  const [consent, setConsent] = useState(false)
 
   const testimonials = [
     {
       name: 'Ana M.',
+      initials: 'AM',
       text: 'Un centru de reabilitare de nota 10... Recomand cu drag',
       rating: 5,
       img: 'close-up-shot-of-glad-satisfied-woman-being-happy-2026-01-08-05-22-29-utc.jpg',
       before: 'close-up-of-young-woman-s-mouth-2026-01-11-09-42-06-utc.jpg',
       after: 'a-closeup-shot-of-a-smiling-woman-showing-her-clea-2026-01-11-08-37-43-utc.jpg',
       service: 'All-on-4 Platinum',
+      timeframe: '3 luni',
     },
     {
       name: 'Ion P.',
+      initials: 'IP',
       text: 'Personalul de nota 10, curățenie de nota 10',
       rating: 5,
       img: 'exuding-radiance-captivating-close-up-of-a-woman-2026-01-06-11-00-32-utc.jpg',
       before: 'with-the-help-of-high-tech-equipment-and-expert-sk-2026-01-05-04-52-49-utc.jpg',
       after: 'a-sexy-hot-redhead-dentist-woman-taking-care-of-h-2026-01-07-01-18-20-utc.jpg',
       service: 'Implanturi Premium',
+      timeframe: '2 luni',
     },
     {
       name: 'Maria L.',
+      initials: 'ML',
       text: 'Rezultate excelente, durere minimă',
       rating: 5,
       img: 'young-female-dentist-in-dental-office-dentist-at-2026-01-09-06-51-47-utc.jpg',
       before: 'a-woman-at-an-appointment-with-a-professional-dent-2026-01-05-05-08-43-utc.jpg',
       after: 'exuding-radiance-captivating-close-up-of-a-woman-2026-01-06-11-00-32-utc.jpg',
       service: 'Fațete Ceramice',
+      timeframe: '1 lună',
     },
+  ]
+
+  const faqItems = [
+    { question: 'Ce este All-on-4 și cum funcționează?', answer: 'All-on-4 este o soluție de reabilitare orală completă care utilizează doar 4 implanturi pentru a susține o dantură fixă. Procedura este minim invazivă și oferă rezultate rapide, cu un timp de recuperare scurt.' },
+    { question: 'Cât durează un tratament All-on-4?', answer: 'Tratamentul All-on-4 poate fi finalizat în doar 24 de ore, inclusiv consultul inițial, planificarea digitală și plasarea implanturilor.' },
+    { question: 'Este dureroasă procedura de implanturi?', answer: 'Utilizăm sedare IV pentru a asigura confortul maxim al pacienților. Majoritatea pacienților raportează disconfort minim sau deloc.' },
+    { question: 'Ce este CBCT 3D și de ce este important?', answer: 'CBCT 3D este o tehnologie de imagistică avansată care ne permite să planificăm tratamentele cu precizie maximă, asigurând rezultate optime și siguranță.' },
+    { question: 'Oferiți finanțare în rate?', answer: 'Da, oferim opțiuni de finanțare flexibile, inclusiv rate fără dobândă, pentru a face tratamentele accesibile.' },
+    { question: 'Cât timp durează recuperarea după un tratament All-on-4?', answer: 'Majoritatea pacienților se pot întoarce la activitățile normale în câteva zile, cu o recuperare completă în 2-3 săptămâni.' },
+    { question: 'Ce garanție oferă DentOne?', answer: 'Oferim garanție de 10 ani pentru tratamentele All-on-4 și implanturi, cu condiția respectării planului de îngrijire post-tratament.' },
+    { question: 'Cum pot programa o consultatie?', answer: 'Puteți programa o consultație gratuită prin formularul de contact, telefon sau WhatsApp. Echipa noastră vă va contacta în cel mai scurt timp.' },
   ]
 
   const testimonialsCount = testimonials.length
@@ -53,10 +83,13 @@ export default function Home() {
   const services = [
     { 
       title: 'All-on-4 Platinum', 
-      price: '26.000 RON', 
+      price: 'de la 26.000 RON', 
       desc: 'Dantură fixă în 24 ore cu sedare IV și PRGF', 
       img: 'dental-tools-medical-equipment-2026-01-07-01-00-49-utc.jpg', 
       features: ['Sedare IV', 'PRGF', 'CT inclus', 'Garanție 10 ani', 'Consult gratuit'], 
+      includes: ['Consult inițial', 'Planificare digitală CBCT 3D', 'Sedare IV pentru confort maxim'], 
+      suitableFor: 'Pacienți cu edentație totală sau parțială', 
+      treatmentLink: '#', 
       video: 'Beautiful-Smile-And-Perfect-Teeth-In-Dental-Clinic-4K-2025-12-17-21-47-45-Utc.mp4'
     },
     { 
@@ -65,6 +98,9 @@ export default function Home() {
       desc: 'Implanturi Nobel Biocare cu garanție lifetime', 
       img: 'detail-of-a-dental-tools-attached-to-a-dental-chai-2026-01-09-11-06-26-utc.jpg', 
       features: ['Implant Nobel', 'Oase artificial', 'Sedare locală', 'Garanție lifetime', 'CBCT 3D'], 
+      includes: ['Consult și evaluare', 'Planificare digitală', 'Implanturi Nobel Biocare'], 
+      suitableFor: 'Pacienți cu dinți lipsă sau deteriorați', 
+      treatmentLink: '#', 
       video: 'Dental-Care-Extreme-Close-Up-Macro-Video-Dentist-T-4K-2025-12-17-23-26-33-Utc.mp4'
     },
     { 
@@ -73,6 +109,9 @@ export default function Home() {
       desc: 'Zâmbet perfect cu fațete de porcelan premium', 
       img: 'woman-s-lips-and-teeth-smile-close-up-2026-01-06-10-56-09-utc.jpg', 
       features: ['Porțelan premium', 'Culoare naturală', 'Durabilitate 15+', 'Consult gratuit', 'Finanțare în rate'], 
+      includes: ['Consult estetic', 'Planificare zâmbet digital', 'Fațete personalizate'], 
+      suitableFor: 'Pacienți care doresc un zâmbet estetic', 
+      treatmentLink: '#', 
       video: 'Young-Beautiful-Woman-Smile-After-Dental-Whitening-4K-2025-12-17-09-15-56-Utc.mp4'
     },
     { 
@@ -81,6 +120,9 @@ export default function Home() {
       desc: 'Tratament sub microscop Zeiss', 
       img: 'in-a-modern-medical-center-dentistry-checks-the-r-2026-01-05-05-35-48-utc.jpg', 
       features: ['Microscop Zeiss', 'Anestezie locală', 'Tratament în 1 ședință', 'Garanție 5 ani', 'Urgente acceptate'], 
+      includes: ['Diagnostic precis', 'Tratament sub microscop', 'Urmărire post-tratament'], 
+      suitableFor: 'Pacienți cu infecții sau dureri dentare', 
+      treatmentLink: '#', 
       video: 'Perfect-White-Teeth-Close-Up-With-Shade-Guide-Blea-4K-2025-12-17-13-28-09-Utc.mp4'
     },
     { 
@@ -89,6 +131,9 @@ export default function Home() {
       desc: 'Tratamente avansate cu laser', 
       img: 'female-dentist-with-assistant-working-in-dental-cl-2026-01-07-07-00-33-utc.jpg', 
       features: ['Laser terapie', 'Regenerare os', 'Igienizare profesională', 'Prevenție', 'Tratament gingivită'], 
+      includes: ['Evaluare parodontală', 'Tratament cu laser', 'Plan de îngrijire'], 
+      suitableFor: 'Pacienți cu probleme de gingii', 
+      treatmentLink: '#', 
       video: 'Closeup-Woman-Flossing-Perfect-White-Teeth-With-Fl-4K-2025-12-17-23-18-55-Utc.mp4'
     },
     { 
@@ -97,6 +142,9 @@ export default function Home() {
       desc: 'Alignere invizibile pentru zâmbet perfect', 
       img: 'woman-holds-aligners-in-dentistry-while-sitting-in-2026-01-08-07-50-11-utc.jpg', 
       features: ['Alignere invizibile', 'Aparate fixe', 'Tratament rapid', 'Rezultate permanente', 'Finanțare flexibilă'], 
+      includes: ['Consult ortodontic', 'Planificare digitală', 'Alignere personalizate'], 
+      suitableFor: 'Pacienți care doresc aliniere dentară', 
+      treatmentLink: '#', 
       video: 'Young-Handsome-Woman-After-Dental-Whitening-Proces-4K-2025-12-17-04-13-54-Utc.mp4'
     },
   ]
@@ -121,14 +169,14 @@ export default function Home() {
     { title: 'Tehnologie de Vârf', desc: 'Microscop Zeiss, Laser, PRGF', img: 'dental-tools-medical-equipment-2026-01-07-01-00-49-utc.jpg', span: 'col-span-2 row-span-1' },
     { title: 'Echipă Experți', desc: 'Dr. Carl Moussa și echipa', img: 'a-sexy-hot-redhead-dentist-woman-taking-care-of-h-2026-01-07-01-18-20-utc.jpg', span: 'col-span-1 row-span-2' },
     { title: 'Rezultate Rapide', desc: 'Dantură fixă în 24 ore', img: 'close-up-shot-of-glad-satisfied-woman-being-happy-2026-01-08-05-22-29-utc.jpg', span: 'col-span-1 row-span-1' },
-    { title: 'Satisfacție 100%', desc: 'Peste 1000 pacienți fericiți', img: 'exuding-radiance-captivating-close-up-of-a-woman-2026-01-06-11-00-32-utc.jpg', span: 'col-span-1 row-span-1' },
+    { title: 'Feedback Excelent', desc: 'Peste 1000 pacienți mulțumiți', img: 'exuding-radiance-captivating-close-up-of-a-woman-2026-01-06-11-00-32-utc.jpg', span: 'col-span-1 row-span-1' },
     { title: 'Finanțare', desc: 'Plată în rate, carduri acceptate', img: 'young-female-dentist-in-dental-office-dentist-at-2026-01-09-06-51-47-utc.jpg', span: 'col-span-2 row-span-1' },
   ]
 
   const team = [
-    { name: 'Dr. Carl Moussa', title: 'Chirurg Oral', img: 'a-sexy-hot-redhead-dentist-woman-taking-care-of-h-2026-01-07-01-18-20-utc.jpg', desc: 'Specialist în implantologie și chirurgie orală cu 20+ ani experiență' },
-    { name: 'Dr. Ana Popescu', title: 'Ortodont', img: 'young-female-dentist-in-dental-office-dentist-at-2026-01-09-06-51-47-utc.jpg', desc: 'Expert în ortodonție și aliniere dentară' },
-    { name: 'Dr. Ion Georgescu', title: 'Endodont', img: 'in-a-modern-medical-center-dentistry-checks-the-r-2026-01-05-05-35-48-utc.jpg', desc: 'Specialist în tratamente de canal sub microscop' },
+    { name: 'Dr. Carl Moussa', title: 'Chirurg Oral', img: 'a-sexy-hot-redhead-dentist-woman-taking-care-of-h-2026-01-07-01-18-20-utc.jpg', desc: 'Specialist în implantologie și chirurgie orală cu 20+ ani experiență', specialty: 'Implantologie și chirurgie orală', focus: 'Reabilitări orale complexe', style: 'Comunicare clară și empatică' },
+    { name: 'Dr. Ana Popescu', title: 'Ortodont', img: 'young-female-dentist-in-dental-office-dentist-at-2026-01-09-06-51-47-utc.jpg', desc: 'Expert în ortodonție și aliniere dentară', specialty: 'Ortodonție și estetică dentară', focus: 'Alignere invizibile și aparate fixe', style: 'Atentă la detalii și rezultate' },
+    { name: 'Dr. Ion Georgescu', title: 'Endodon', img: 'in-a-modern-medical-center-dentistry-checks-the-r-2026-01-05-05-35-48-utc.jpg', desc: 'Specialist în tratamente de canal sub microscop', specialty: 'Endodonție și tratamente de canal', focus: 'Tratamente sub microscop Zeiss', style: 'Precis și orientat către soluții' },
   ]
 
   return (
@@ -194,24 +242,33 @@ export default function Home() {
                   Consult gratuit • CBCT 3D • Sedare IV
                 </div>
 
-                <h1 className="mt-5 text-5xl md:text-6xl font-black tracking-tight text-slate-950 dark:text-white leading-[1.02]">
+                <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-slate-500 dark:text-slate-400">
+                  <span className="inline-block size-2 rounded-full bg-cyan-500" />
+                  CLINICĂ PREMIUM • BUCUREȘTI SECTOR 2
+                </div>
+                <h1 className="mt-3 text-5xl md:text-6xl font-black tracking-tight text-slate-950 dark:text-white leading-[1.02]">
                   Dantură fixă în 24 ore,
                   <span className="block bg-gradient-to-r from-cyan-600 via-sky-600 to-indigo-600 bg-clip-text text-transparent">cu look natural</span>
                 </h1>
 
-                <p className="mt-5 text-lg md:text-xl text-slate-700 dark:text-slate-300">
-                  București, Sector 2 — reabilitări orale complexe, implanturi premium și estetică dentară.
+                <p className="mt-5 text-lg md:text-xl text-slate-700 dark:text-slate-300 max-w-xl">
+                  Reabilitări orale complexe, implanturi premium și estetică dentară în București, Sector 2.
                 </p>
 
                 <div className="mt-6 flex flex-wrap gap-3">
                   {[
-                    { k: '1.000+', v: 'pacienți tratați' },
-                    { k: '24h', v: 'dantură fixă' },
-                    { k: '10 ani', v: 'garanție' },
+                    { icon: 'fa-user-check', k: '1.000+', v: 'pacienți tratați' },
+                    { icon: 'fa-clock', k: '24h', v: 'dantură fixă' },
+                    { icon: 'fa-shield-alt', k: '10 ani', v: 'garanție' },
                   ].map((it) => (
-                    <div key={it.k} className="rounded-2xl border border-slate-200/70 dark:border-slate-700/70 bg-white/55 dark:bg-slate-900/30 px-4 py-3">
-                      <div className="text-lg font-black text-slate-950 dark:text-white leading-none">{it.k}</div>
-                      <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">{it.v}</div>
+                    <div key={it.k} className="rounded-2xl border border-slate-200/70 dark:border-slate-700/70 bg-white/55 dark:bg-slate-900/30 px-4 py-3 flex items-center gap-3">
+                      <div className="size-8 rounded-xl bg-cyan-500/10 grid place-items-center text-cyan-600 dark:text-cyan-400">
+                        <i className={`fas ${it.icon}`}></i>
+                      </div>
+                      <div>
+                        <div className="text-lg font-black text-slate-950 dark:text-white leading-none">{it.k}</div>
+                        <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">{it.v}</div>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -219,16 +276,32 @@ export default function Home() {
                 <div className="mt-7 flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={() => setModalOpen(true)}
-                    className="rounded-2xl px-6 py-4 font-black bg-slate-950 text-white hover:bg-slate-900 transition"
+                    className="rounded-2xl px-6 py-4 font-black bg-slate-950 text-white hover:bg-slate-900 transition hover:-translate-y-0.5 hover:shadow-lg"
                   >
                     Programează consult
                   </button>
                   <a
                     href="#services"
-                    className="rounded-2xl px-6 py-4 font-black border border-slate-200/80 text-slate-950 bg-white/50 hover:bg-white/75 transition"
+                    className="rounded-2xl px-6 py-4 font-black border border-slate-200/80 text-slate-950 bg-white/50 hover:bg-white/75 transition hover:-translate-y-0.5 hover:shadow-lg"
                   >
                     Vezi servicii
                   </a>
+                </div>
+
+                {/* Mini-stepper */}
+                <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    { step: '1', title: 'Consult', desc: 'Evaluare gratuită' },
+                    { step: '2', title: 'Planificare', desc: 'CBCT 3D' },
+                    { step: '3', title: 'Tratament', desc: 'Sedare IV' },
+                    { step: '4', title: 'Rezultat', desc: 'Dantură fixă' },
+                  ].map((item) => (
+                    <div key={item.step} className="rounded-2xl border border-slate-200/70 dark:border-slate-700/70 bg-white/55 dark:bg-slate-900/30 p-4">
+                      <div className="text-lg font-black text-slate-950 dark:text-white">{item.step}</div>
+                      <div className="text-sm font-semibold text-slate-700 dark:text-slate-200 mt-1">{item.title}</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">{item.desc}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -240,8 +313,9 @@ export default function Home() {
       <section id="services" className="scroll-mt-40 py-24 px-6 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">Servicii premium</h2>
-            <p className="mt-3 text-slate-600 dark:text-slate-300 max-w-2xl">Pachete clare, tehnologie modernă și o experiență clinică care se simte premium de la primul pas.</p>
+            <div className="text-sm font-semibold text-slate-500 dark:text-slate-400">OFERIM PACHETE CLĂRE</div>
+            <h2 className="mt-2 text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">Servicii premium</h2>
+            <p className="mt-3 text-slate-600 dark:text-slate-300 max-w-2xl">Tehnologie modernă și o experiență clinică care se simte premium de la primul pas.</p>
           </div>
           <div className="hidden md:flex items-center gap-2 text-sm font-semibold text-slate-500 dark:text-slate-400">
             <span className="inline-flex items-center gap-2 rounded-full px-4 py-2 border border-slate-200/70 dark:border-slate-700/70 bg-white/40 dark:bg-slate-900/25">Sedare IV</span>
@@ -279,6 +353,20 @@ export default function Home() {
                     </span>
                   ))}
                 </div>
+                <div className="mt-4">
+                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">Ce include:</div>
+                  <ul className="mt-2 text-xs text-slate-600 dark:text-slate-300 space-y-1">
+                    {service.includes.map((item, i) => (
+                      <li key={i} className="flex items-center gap-2"><i className="fas fa-check text-cyan-500 text-xs" />{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="mt-4 text-xs text-slate-500 dark:text-slate-400">
+                  <span className="font-semibold">Pentru cine e potrivit:</span> {service.suitableFor}
+                </div>
+                <div className="mt-4">
+                  <a href={service.treatmentLink} className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 hover:underline">Vezi pașii tratamentului</a>
+                </div>
               </div>
             </button>
           ))}
@@ -313,6 +401,29 @@ export default function Home() {
             </div>
           ))}
             </div>
+
+            {/* FAQ Section */}
+            <div className="mt-16">
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-6">Întrebări frecvente</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {faqItems.map((item, index) => (
+                  <div key={index} className="rounded-2xl border border-slate-200/70 dark:border-slate-700/70 bg-white/55 dark:bg-slate-900/30">
+                    <button
+                      onClick={() => setActiveFaq(activeFaq === index ? null : index)}
+                      className="w-full p-4 text-left flex justify-between items-center"
+                    >
+                      <span className="font-semibold text-slate-900 dark:text-white">{item.question}</span>
+                      <i className={`fas ${activeFaq === index ? 'fa-chevron-up' : 'fa-chevron-down'} text-slate-500 dark:text-slate-400`} />
+                    </button>
+                    {activeFaq === index && (
+                      <div className="p-4 pt-0 text-slate-600 dark:text-slate-300">
+                        {item.answer}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -323,6 +434,17 @@ export default function Home() {
           <div>
             <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">Galerie</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300 max-w-2xl">Un mix foto + video într-un grid curat, fără suprapuneri și fără crop-uri ciudate.</p>
+          </div>
+          <div className="flex gap-2">
+            {['Foto', 'Video', 'Cazuri'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition ${activeTab === tab ? 'bg-slate-900 text-white' : 'bg-white/50 text-slate-700 hover:bg-white/75'}`}
+              >
+                {tab}
+              </button>
+            ))}
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
@@ -341,6 +463,9 @@ export default function Home() {
               >
                 <Image src={`/${img}`} alt={`Galerie ${index + 1}`} fill sizes="(min-width:768px) 30vw, 50vw" className="object-cover" />
                 <div className="absolute inset-0 opacity-0 hover:opacity-100 transition bg-gradient-to-t from-black/40 via-black/0 to-transparent" />
+                <div className="absolute bottom-2 left-2 right-2 bg-black/50 text-white text-xs p-2 rounded-b-[20px] opacity-0 hover:opacity-100 transition">
+                  {img.replace(/-/g, ' ').replace('.jpg', '')}
+                </div>
               </div>
             )
           })}
@@ -350,11 +475,19 @@ export default function Home() {
             <video controls className="w-full h-full">
               <source src="/Beautiful-Smile-And-Perfect-Teeth-In-Dental-Clinic-4K-2025-12-17-21-47-45-Utc.mp4" type="video/mp4" />
             </video>
+            <div className="p-4 bg-white/80 dark:bg-slate-900/50">
+              <div className="text-sm font-semibold text-slate-900 dark:text-white">Zâmbet perfect</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">Rezultat All-on-4</div>
+            </div>
           </div>
           <div className="rounded-[28px] overflow-hidden border border-slate-200/70 dark:border-slate-700/70 surface-solid">
             <video controls className="w-full h-full">
               <source src="/Young-Beautiful-Woman-Smile-After-Dental-Whitening-4K-2025-12-17-09-15-56-Utc.mp4" type="video/mp4" />
             </video>
+            <div className="p-4 bg-white/80 dark:bg-slate-900/50">
+              <div className="text-sm font-semibold text-slate-900 dark:text-white">Albire dentară</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">Procedură profesională</div>
+            </div>
           </div>
         </div>
       </section>
@@ -423,8 +556,9 @@ export default function Home() {
                       <Image src={`/${testimonials[activeTestimonial].img}`} alt={testimonials[activeTestimonial].name} fill sizes="56px" className="object-cover" />
                     </div>
                     <div>
-                      <div className="text-lg font-black text-slate-900 dark:text-white">{testimonials[activeTestimonial].name}</div>
+                      <div className="text-lg font-black text-slate-900 dark:text-white">{testimonials[activeTestimonial].initials}</div>
                       <div className="text-sm font-semibold text-slate-500 dark:text-slate-400">{testimonials[activeTestimonial].service}</div>
+                      <div className="text-xs text-slate-400 dark:text-slate-500">{testimonials[activeTestimonial].timeframe}</div>
                     </div>
                   </div>
 
@@ -456,7 +590,8 @@ export default function Home() {
       <section id="team" className="scroll-mt-40 py-24 px-6 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">Echipă</h2>
+            <div className="text-sm font-semibold text-slate-500 dark:text-slate-400">SPECIALIȘTI CU EXPERIENȚĂ</div>
+            <h2 className="mt-2 text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">Echipa</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300 max-w-2xl">Specialiști cu experiență și o comunicare clară — fără vibe medical rece.</p>
           </div>
         </div>
@@ -473,9 +608,34 @@ export default function Home() {
               </div>
               <div className="p-6">
                 <p className="text-slate-600 dark:text-slate-300">{member.desc}</p>
+                <div className="mt-4">
+                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">Specialitate:</div>
+                  <div className="mt-1 text-sm text-slate-700 dark:text-slate-200">{member.specialty}</div>
+                </div>
+                <div className="mt-3">
+                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">Se concentrează pe:</div>
+                  <div className="mt-1 text-sm text-slate-700 dark:text-slate-200">{member.focus}</div>
+                </div>
+                <div className="mt-3">
+                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">Stil de lucru:</div>
+                  <div className="mt-1 text-sm text-slate-700 dark:text-slate-200">{member.style}</div>
+                </div>
               </div>
             </div>
           ))}
+        </div>
+        
+        {/* Trust Card */}
+        <div className="mt-12 rounded-[28px] border border-slate-200/70 dark:border-slate-700/70 bg-white/55 dark:bg-slate-900/30 p-6 md:p-8">
+          <div className="flex items-center gap-4">
+            <div className="size-12 rounded-2xl bg-cyan-500/10 grid place-items-center text-cyan-600 dark:text-cyan-400">
+              <i className="fas fa-lightbulb text-xl"></i>
+            </div>
+            <div>
+              <h3 className="text-xl font-black text-slate-900 dark:text-white">Explicăm clar, fără jargon</h3>
+              <p className="mt-2 text-slate-600 dark:text-slate-300">Toți membrii echipei DentOne folosesc limbaj simplu, fără termeni medicali complicate. Ne asigurăm că înțelegi fiecare pas al tratamentului.</p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -562,26 +722,113 @@ export default function Home() {
 
             <div className="xl:col-span-4">
               <div className="rounded-[28px] surface-solid p-7">
-                <h3 className="text-xl font-black text-slate-900 dark:text-white">Trimite-ne un mesaj</h3>
-                <form className="mt-6 space-y-4">
+                <h3 className="text-xl font-black text-slate-900 dark:text-white">Programează consultul</h3>
+                <form className="mt-6 space-y-4" onSubmit={(e) => {
+                  e.preventDefault()
+                  setFormStatus('sending')
+                  setTimeout(() => {
+                    setFormStatus('success')
+                    setFormData({
+                      nume: '',
+                      telefon: '',
+                      email: '',
+                      serviciu: '',
+                      mesaj: '',
+                      preferinta: 'Telefon',
+                      interval: ''
+                    })
+                    setConsent(false)
+                    setTimeout(() => {
+                      setFormStatus(null)
+                    }, 3000)
+                  }, 1500)
+                }}>
                   <input
                     type="text"
                     placeholder="Nume complet"
+                    value={formData.nume}
+                    onChange={(e) => setFormData({ ...formData, nume: e.target.value })}
                     className="w-full rounded-2xl px-4 py-4 border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-900/30 text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-400/40 focus:border-cyan-300 dark:focus:border-cyan-400 outline-none transition"
                     required
                   />
                   <input
                     type="tel"
                     placeholder="Număr de telefon"
+                    value={formData.telefon}
+                    onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
                     className="w-full rounded-2xl px-4 py-4 border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-900/30 text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-400/40 focus:border-cyan-300 dark:focus:border-cyan-400 outline-none transition"
                     required
                   />
+                  <input
+                    type="email"
+                    placeholder="Email (opțional)"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full rounded-2xl px-4 py-4 border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-900/30 text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-400/40 focus:border-cyan-300 dark:focus:border-cyan-400 outline-none transition"
+                  />
+                  <select
+                    value={formData.serviciu}
+                    onChange={(e) => setFormData({ ...formData, serviciu: e.target.value })}
+                    className="w-full rounded-2xl px-4 py-4 border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-900/30 text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-400/40 focus:border-cyan-300 dark:focus:border-cyan-400 outline-none transition"
+                  >
+                    <option value="">Alege serviciul</option>
+                    <option value="All-on-4">All-on-4</option>
+                    <option value="Implanturi">Implanturi</option>
+                    <option value="Fațete">Fațete ceramice</option>
+                    <option value="Endodonție">Endodonție</option>
+                    <option value="Parodontologie">Parodontologie</option>
+                    <option value="Ortodonție">Ortodonție</option>
+                  </select>
+                  <select
+                    value={formData.preferinta}
+                    onChange={(e) => setFormData({ ...formData, preferinta: e.target.value })}
+                    className="w-full rounded-2xl px-4 py-4 border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-900/30 text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-400/40 focus:border-cyan-300 dark:focus:border-cyan-400 outline-none transition"
+                  >
+                    <option value="Telefon">Contact telefonic</option>
+                    <option value="WhatsApp">WhatsApp</option>
+                  </select>
+                  <input
+                    type="text"
+                    placeholder="Interval preferat (ex: 14:00 - 16:00)"
+                    value={formData.interval}
+                    onChange={(e) => setFormData({ ...formData, interval: e.target.value })}
+                    className="w-full rounded-2xl px-4 py-4 border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-900/30 text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-400/40 focus:border-cyan-300 dark:focus:border-cyan-400 outline-none transition"
+                  />
                   <textarea
                     placeholder="Mesajul tău"
-                    rows="6"
+                    rows="4"
+                    value={formData.mesaj}
+                    onChange={(e) => setFormData({ ...formData, mesaj: e.target.value })}
                     className="w-full rounded-2xl px-4 py-4 border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-900/30 text-slate-900 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-400/40 focus:border-cyan-300 dark:focus:border-cyan-400 outline-none transition resize-none"
                   ></textarea>
-                  <button type="submit" className="w-full rounded-2xl px-5 py-4 font-black bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 transition">
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      id="consent"
+                      checked={consent}
+                      onChange={(e) => setConsent(e.target.checked)}
+                      className="mt-1 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500"
+                      required
+                    />
+                    <label htmlFor="consent" className="text-xs text-slate-600 dark:text-slate-400">
+                      Sunt de acord cu prelucrarea datelor mele personale în baza regulamentului GDPR
+                    </label>
+                  </div>
+                  {formStatus === 'sending' && (
+                    <div className="text-sm text-slate-500 dark:text-slate-400">Se trimite...</div>
+                  )}
+                  {formStatus === 'success' && (
+                    <div className="text-sm text-green-600 dark:text-green-400">Mesajul a fost trimis cu succes! Îți vom contacta în scurt timp.</div>
+                  )}
+                  <button 
+                    type="submit" 
+                    disabled={formStatus === 'sending'}
+                    className={`w-full rounded-2xl px-5 py-4 font-black transition ${
+                      formStatus === 'sending' 
+                        ? 'bg-slate-400 text-white cursor-not-allowed' 
+                        : 'bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100'
+                    }`}
+                  >
                     Trimite
                   </button>
                 </form>
@@ -590,6 +837,38 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Sticky CTA Bar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-t border-slate-200/70 dark:border-slate-700/70 z-40 lg:hidden">
+        <div className="flex items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-2">
+            <div className="size-8 rounded-full bg-cyan-500/10 grid place-items-center text-cyan-600 dark:text-cyan-400">
+              <i className="fas fa-phone text-sm"></i>
+            </div>
+            <div className="text-sm font-semibold text-slate-900 dark:text-white">Sună acum</div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => window.location.href = 'tel:+40770202200'}
+              className="rounded-xl px-4 py-3 font-bold bg-slate-900 text-white hover:bg-slate-800 transition"
+            >
+              <i className="fas fa-phone mr-2"></i> Sună
+            </button>
+            <button 
+              onClick={() => window.open('https://wa.me/40770202200', '_blank')}
+              className="rounded-xl px-4 py-3 font-bold bg-green-600 text-white hover:bg-green-700 transition"
+            >
+              <i className="fab fa-whatsapp mr-2"></i> WhatsApp
+            </button>
+            <button 
+              onClick={() => setModalOpen(true)}
+              className="rounded-xl px-4 py-3 font-bold bg-cyan-500 text-white hover:bg-cyan-600 transition"
+            >
+              <i className="fas fa-calendar mr-2"></i> Programează
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* Service Modal */}
       {activeService && (
